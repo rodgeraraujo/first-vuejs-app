@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+        <link rel="stylesheet" href="main.css">
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="shopping-list">
+            <div class="header">
+                <h1>{{ header.toLocaleUpperCase() }}</h1>
+                <button v-if="state === 'default'" class="btn btn-primary" @click="changeState('edit')">Add Item</button>
+                <!-- <p>{{ chatacterCount }}/200</p> -->
+                <button v-else class="btn btn-cancel" @click="changeState('default')">Cancel Adding Item</button>
+            </div> 
+            <!-- <h1>{{ header.toLocalUpperCase() }}</h1> -->
+            <!-- <h1>{{ header ? header : 'welcome' }}</h1> -->
+            <div v-if="state === 'edit'" class="add-item-form">
+                <!-- replace v-on: to @ -->
+                    <input v-model="newItem" type="text" placeholder="Add an item" @keyup.enter="saveItem">
+                    <button class="btn btn-primary" @click="saveItem">Save Item</button>
+            </div>
+            <!-- <a v-bin:href="newItem" target="_blank">Dynamic Link</a> -->
+            <ul>
+                <!-- <li v-for="item in items" :class="[item.purchased ? 'strikeout' : '', item.highPriority ? 'pSriority' : '']">{{ item }}</li> -->
+                <li v-for="item in reversedItems" :class="{strikeout: item.purchased}" @click="togglePurchased(item)">{{ item.label }}</li>
+            </ul>
+            <p v-if="items.length === 0">Nice job! You've bought all you items.</p>
+            <!-- <input type="text" v-model="header"> -->
+        </div>
+        <script src="https://unpkg.com/vue"></script>
+        <script>
+            var shoppingList = new Vue({
+                el: '#shopping-list',
+                data: {
+                    state: 'default',
+                    header: 'shopping list app',
+                    // header: 'Vue is ready to party!'
+                    // header: null
+                    newItem: '',
+                    items: [
+                        {
+                            label: '10 party hats',
+                            purchased: false,
+                            highPriority: false,
+                        },
+                        {
+                            label: '2 board games',
+                            purchased: true,
+                            highPriority: false,
+                        },
+                        {
+                            label: '20 cups',
+                            purchased: false,
+                            highPriority: false,
+                        },
+                        // '10 party hats',
+                        // '2 board games',
+                        // '20 cups',
+                    ]
+                },
+                computed: {
+                    // chatacterCount () {
+                    //     return this.newItem.length;
+                    // }
+                    reversedItems() {
+                        return this.items.slice(0).reverse();
+                    }
+                },
+                methods: {
+                    saveItem: function() {
+                        this.items.push({
+                            label: this.newItem,
+                            purchased: false,
+                        });
+                        this.newItem = '';
+                    },
+                    changeState: function(newState) {
+                        this.state = newState;
+                        this.newItem = '';
+                    },
+                    togglePurchased: function(item) {
+                        item.purchased = !item.purchased;
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
